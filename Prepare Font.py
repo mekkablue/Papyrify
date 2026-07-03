@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function, unicode_literals
 __doc__="""
-Pick a master from one of the currently open fonts and turn it into a two-master Papyrify setup: a copy of the font with a single ‘Papyrify’ axis (tag PAPY) and two masters, one at PAPY=0 and one at PAPY=100.
+Pick a master from one of the currently open fonts and turn it into a two-master Papyrify setup: a copy of the font with a single ‘Papyrify’ axis (tag PAPY) and two masters, one at PAPY=0 and one at PAPY=100. Glyphs are decomposed and cleaned up (node names, notes, guides, colors, annotations, backgrounds and backup layers removed) so only what is necessary for the effect remains.
 """
 
 import vanilla
@@ -144,10 +144,12 @@ class PrepareFont(object):
 				chosenMaster.name = "%s PAPY 0" % baseName
 				chosenMaster.axes = [0]
 
-				# decompose and clean up every glyph on the chosen master, and strip extras:
+				# decompose and clean up every glyph on the chosen master, and strip everything
+				# that is not needed for the Papyrify effect (inspired by Garbage Collection):
 				for thisGlyph in font.glyphs:
-					# remove glyph color:
+					# remove glyph color and note:
 					thisGlyph.color = None
+					thisGlyph.note = None
 
 					# remove all backup layers (keep master and special layers):
 					for i in range(len(thisGlyph.layers) - 1, -1, -1):
@@ -169,10 +171,23 @@ class PrepareFont(object):
 					# tidy up the decomposed paths:
 					thisLayer.cleanUpPaths()
 
-					# remove guides, colors and annotations:
+					# strip node names (markers left behind by other scripts):
+					for thisPath in thisLayer.paths:
+						for thisNode in thisPath.nodes:
+							thisNode.name = None
+
+					# clear the background:
+					thisLayer.background.clear()
+
+					# remove guides, colors and annotations (foreground and background):
 					thisLayer.guides = []
+					thisLayer.background.guides = []
 					thisLayer.color = None
 					thisLayer.annotations = []
+					thisLayer.background.annotations = []
+
+				# remove global (master) guides:
+				chosenMaster.guides = []
 
 				# duplicate the chosen master and put the copy at PAPY=100:
 				secondMaster = copy(chosenMaster)
