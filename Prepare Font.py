@@ -144,6 +144,36 @@ class PrepareFont(object):
 				chosenMaster.name = "%s PAPY 0" % baseName
 				chosenMaster.axes = [0]
 
+				# decompose and clean up every glyph on the chosen master, and strip extras:
+				for thisGlyph in font.glyphs:
+					# remove glyph color:
+					thisGlyph.color = None
+
+					# remove all backup layers (keep master and special layers):
+					for i in range(len(thisGlyph.layers) - 1, -1, -1):
+						thisLayer = thisGlyph.layers[i]
+						if not thisLayer.isMasterLayer and not thisLayer.isSpecialLayer:
+							del thisGlyph.layers[i]
+
+					thisLayer = thisGlyph.layers[chosenMaster.id]
+					if thisLayer is None:
+						continue
+
+					# decompose components into paths:
+					decomposedLayer = thisLayer.copyDecomposedLayer()
+					decomposedLayer.layerId = chosenMaster.id
+					decomposedLayer.associatedMasterId = chosenMaster.id
+					thisGlyph.layers[chosenMaster.id] = decomposedLayer
+					thisLayer = thisGlyph.layers[chosenMaster.id]
+
+					# tidy up the decomposed paths:
+					thisLayer.cleanUpPaths()
+
+					# remove guides, colors and annotations:
+					thisLayer.guides = []
+					thisLayer.color = None
+					thisLayer.annotations = []
+
 				# duplicate the chosen master and put the copy at PAPY=100:
 				secondMaster = copy(chosenMaster)
 				secondMaster.id = NSUUID.UUID().UUIDString()
