@@ -195,6 +195,10 @@ class PrepareFont(object):
 				secondMaster.name = "%s PAPY 100" % baseName
 				font.masters.append(secondMaster)
 				secondMaster.axes = [100]
+
+				# copy the glyph layers into the new master (appending a master leaves them empty):
+				for thisGlyph in font.glyphs:
+					thisGlyph.setLayer_forId_(copy(thisGlyph.layers[chosenMaster.id]), secondMaster.id)
 			finally:
 				font.enableUpdateInterface()
 
