@@ -9,24 +9,23 @@ The repository ships two scripts that are meant to be used one after the other:
 
 ## Requirements
 
-- Glyphs 3 (the scripts use `vanilla` and current `GSFont`/`GSAxis` APIs).
+- Glyphs 3 or later (the scripts use `vanilla` and current `GSFont`/`GSAxis` APIs).
 
 ## Installation
 
-1. Download or clone this repository.
-2. In Glyphs, choose _Script > Open Scripts Folder._
-3. Copy `Prepare Font.py` and `Papyrify.py` into that folder.
-4. Back in Glyphs, choose _Script > Reload Scripts_ (or hold down the Option key while opening the _Script_ menu).
-5. Both scripts now appear at the bottom of the _Script_ menu.
+1. In Glyphs, choose _Window > Plugin Manager._
+2. Switch to the _Scripts_ tab and install **Papyrify.**
+3. In Glyphs 3, hold down the Option key and choose _Script > Reload Scripts_ (not necessary in Glyphs 4).
+4. Both scripts now appear in _Script > Papyrify._
 
 ## Suggested workflow
 
 The fastest way from a single-master font to a Papyrus variable font:
 
 1. Open the font you want to Papyrify.
-2. Run _Script > Prepare Font_ and pick the master to base the effect on. Click **Prepare.** A new, untitled font opens — this is your two-master `PAPY=0`/`PAPY=100` working file.
+2. Run _Script > Papyrify > Prepare Font_ and pick the master to base the effect on. Click **Prepare.** A new, untitled font opens — this is your two-master `PAPY=0`/`PAPY=100` working file.
 3. In the new font, select all glyphs you want to affect (⌘A in Font View, or open an Edit tab with the glyphs/text you care about).
-4. Run _Script > Papyrify,_ leave the defaults for a first try, and click **Papyrify.**
+4. Run _Script > Papyrify > Papyrify,_ leave the defaults for a first try, and click **Papyrify.**
 5. Open an Edit tab, show the interpolation slider (bottom bar of the Edit view) and scrub the `PAPY` axis from 0 to 100 to see the roughening interpolate.
 6. Not rough enough, too rough, or too chunky? Adjust **Push**, **Min Length** and **Max Length** (see [Options](#papyrify-options) below) and run Papyrify again on the same selection — it overwrites the previous result. Because the effect is randomized, running it again with the *same* values also gives you a fresh variation to choose from.
 7. Once you're happy, save the font and export it as a variable font (_File > Export…_, format “Variable Font”).
@@ -37,7 +36,7 @@ The fastest way from a single-master font to a Papyrus variable font:
 Automates the manual two-master setup described under [Manual setup](#manual-setup).
 
 1. Open the font (or fonts) you want to use.
-2. Run _Script > Prepare Font._
+2. Run _Script > Papyrify > Prepare Font._
 3. **Option: master to use** — a pop-up listing every master of every open font (labeled _Family – Master_). Pick the one to base the effect on. If you open or close fonts while the window is up, click the **↺** button to refresh the list.
 4. Click **Prepare.**
 5. A new, untitled font opens. It is a copy of the source font in which:
@@ -51,7 +50,7 @@ Automates the manual two-master setup described under [Manual setup](#manual-set
 Applies the Papyrus effect to a two-master font (for example, one produced by _Prepare Font_). The script requires **exactly two masters** and works on the current glyph selection.
 
 1. Open the two-master font and select the glyphs you want to papyrify — either in Font View, or by putting them in an Edit tab.
-2. Run _Script > Papyrify._
+2. Run _Script > Papyrify > Papyrify._
 3. Set the parameters (see table below), then click **Papyrify.**
 4. The first master (`PAPY=0`) receives the outline subdivided into short segments; the second master (`PAPY=100`) receives the same outline pushed outward at random.
 5. Move the `PAPY` slider in a preview to see the effect interpolate. Re-run the script to roll a new random variation, or tweak the values and run again — each run overwrites the previous result for the selected glyphs.
